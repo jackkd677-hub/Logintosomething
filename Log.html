@@ -3,190 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ລະບົບເຂົ້າສູ່ລະບົບ</title>
+    <title>VIP Secure System & Code Hub</title>
     <style>
         * {
-            font-family: "Phetsarath OT", serif !important;
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Phetsarath OT', 'Segoe UI', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #4fa84d 0%, #1e5822 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #311042, #0284c7);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
             padding: 20px;
         }
 
-        .card {
-            background: #ffffff;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 35px;
             width: 100%;
-            max-width: 420px;
-            padding: 35px 30px;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            color: #ffffff;
+            transition: all 0.4s ease;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .header p { color: #94a3b8; font-size: 14px; }
+
+        .input-box { margin-bottom: 18px; text-align: left; }
+        .input-box label { display: block; margin-bottom: 6px; font-size: 13px; color: #cbd5e1; }
+        .input-box input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+        .input-box input:focus { border-color: #38bdf8; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #0284c7, #9333ea);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-submit:hover { transform: translateY(-2px); }
+
+        #error-msg {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 10px;
+            color: #fca5a5;
+            font-size: 14px;
             text-align: center;
         }
 
-        /* ຈັດຮູບແບບ Form ລັອກອິນ */
-        .input-group {
-            margin-bottom: 18px;
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        /* Dashboard */
+        #dashboard-screen { display: none; }
+
+        .all-messages-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
             text-align: left;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
-        .input-group label {
-            display: block;
-            margin-bottom: 6px;
-            color: #444;
-            font-size: 14px;
-            font-weight: 600;
+        .msg-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #38bdf8;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .msg-card.code-type { border-left-color: #a855f7; }
+
+        .msg-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
 
-        .input-group input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e1e1e1;
+        .msg-header h4 { font-size: 14px; color: #38bdf8; }
+
+        .code-box {
+            background: #090d16;
+            color: #4ade80;
+            font-family: 'Consolas', 'Courier New', monospace;
+            padding: 14px;
             border-radius: 8px;
-            font-size: 15px;
-            outline: none;
-            transition: border-color 0.3s;
+            font-size: 13px;
+            white-space: pre;
+            overflow-x: auto;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            line-height: 1.4;
         }
 
-        .input-group input:focus {
-            border-color: #4fa84d;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
+        .btn-copy {
+            padding: 6px 12px;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid #a855f7;
+            color: #d8b4fe;
+            border-radius: 6px;
+            font-size: 12px;
             cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
+            transition: all 0.2s;
         }
-
-        .btn:active { transform: scale(0.98); }
-
-        .btn-login {
-            background: #4fa84d;
-            color: white;
-            margin-top: 10px;
-        }
+        .btn-copy:hover { background: #a855f7; color: #fff; }
 
         .btn-logout {
-            background: #e53e3e;
-            color: white;
-            margin-top: 20px;
-        }
-
-        /* ກ່ອງແຈ້ງເຕືອນ Error */
-        #error-box {
-            margin-top: 15px;
-            padding: 10px;
-            background: #fff5f5;
-            color: #c53030;
-            border: 1px solid #feb2b2;
-            border-radius: 8px;
+            width: 100%;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 12px;
+            color: #fca5a5;
             font-size: 14px;
-            display: none;
-        }
-
-        /* UI ເມື່ອລັອກອິນສຳເລັດ (Dashboard UI) */
-        #welcome-screen {
-            display: none; /* ເຊື່ອງໄວ້ກ່ອນ */
-        }
-
-        .avatar {
-            font-size: 50px;
-            margin-bottom: 10px;
-        }
-
-        .user-title {
-            color: #2d3748;
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
-
-        .notice-box {
-            background: #f7fafc;
-            border-left: 4px solid #4fa84d;
-            padding: 12px 15px;
-            text-align: left;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #e6fffa;
-            color: #234e52;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <!-- 1. UI ໜ້າລັອກອິນ -->
+<div class="glass-container" id="main-box">
+    
+    <!-- 1. FORM LOGIN -->
     <div id="login-screen">
-        <h2 style="margin-bottom: 20px; color: #333;">ເຂົ້າສູ່ລະບົບ</h2>
-        
-        <div class="input-group">
-            <label>ຊື່ຜູ້ໃຊ້</label>
+        <div class="header">
+            <h1>🔐 CODE & SCRIPT HUB</h1>
+            <p>ເຂົ້າສູ່ລະບົບເພື່ອເບິ່ງໂຄ້ດ ແລະ ຂໍ້ຄວາມທັງໝົດ</p>
+        </div>
+
+        <div class="input-box">
+            <label>ຊື່ຜູ້ໃຊ້ (Username)</label>
             <input type="text" id="username" placeholder="ປ້ອນຊື່ຜູ້ໃຊ້...">
         </div>
-        
-        <div class="input-group">
-            <label>ລະຫັດຜ່ານ</label>
+
+        <div class="input-box">
+            <label>ລະຫັດຜ່ານ (Password)</label>
             <input type="password" id="password" placeholder="ປ້ອນລະຫັດຜ່ານ...">
         </div>
 
-        <button class="btn btn-login" onclick="login()">ລັອກອິນ</button>
-        <div id="error-box"></div>
+        <button class="btn-submit" onclick="handleLogin()">ເຂົ້າສູ່ລະບົບ</button>
+        <div id="error-msg">ລະຫັດ ຫຼື ຊື່ຜູ້ໃຊ້ຜິດ...</div>
     </div>
 
-    <!-- 2. UI ຂໍ້ຄວາມສະແດງແຍກ ເມື່ອລັອກອິນສຳເລັດ -->
-    <div id="welcome-screen">
-        <div class="avatar" id="user-icon">👤</div>
-        <span class="badge" id="user-role">Role</span>
-        <h2 class="user-title" id="welcome-title">ຍິນດີຕ້ອນຮັບ</h2>
-        
-        <div class="notice-box">
-            <p id="user-notice" style="color: #4a5568; font-size: 14px; line-height: 1.5;"></p>
+    <!-- 2. DASHBOARD -->
+    <div id="dashboard-screen">
+        <div class="header">
+            <h1 id="user-name">ສະບາຍດີ!</h1>
+            <p>ລາຍການໂຄ້ດ ແລະ ຂໍ້ຄວາມທັງໝົດຂອງທ່ານ</p>
         </div>
 
-        <button class="btn btn-logout" onclick="logout()">ອອກຈາກລະບົບ</button>
+        <div class="all-messages-container" id="messages-list"></div>
+
+        <button class="btn-logout" onclick="handleLogout()">ອອກຈາກລະບົບ</button>
     </div>
+
 </div>
 
 <script>
-    // ຂໍ້ມູນຜູ້ໃຊ້ແຕ່ລະຄົນ (ສາມາດປ່ຽນ/ເພີ່ມ ຂໍ້ຄວາມແຍກກັນໄດ້ຢູ່ບ່ອນນີ້)
-    const accounts = [
+    // 📊 ຂໍ້ມູນຜູ້ໃຊ້ ແລະ ໂຄ້ດ Matrix Prank ຂອງ San (ຄົບຖ້ວນ 100%)
+    const database = [
         {
-            user: "san",
-            pass: "23102014",
-            icon: "👑",
-            role: "Owner / Admin",
-            title: "ສະບາຍດີ San!",
-            notice: "📌 ຂໍ້ຄວາມປະກາດ: ລະບົບເຮັດວຽກປົກກະຕິ. ທ່ານມີສິດຈັດການຂໍ້ມູນທັງໝົດໃນ Dashboard ໄດ້."
-        },
-        {
-            user: "Hackker system",
-            pass: "Prank system",
-            icon: "👀",
-            role: "ຄົນທົ່ວໄປ",
-            title: "ຍິນດີຕ້ອນຮັບ",
-            notice: "🚀 ຂໍ້ຄວາມປະກາດ:ຂອບໃຈທີ່ໃຊ້ບໍລິການ! ທ່ານໄດ້ຮັບໂຄ້ດ.bat 
-@echo off
+            user: "Hackker",
+            pass: "Prank",
+            name: "555",
+            messages: [
+                {
+                    title: "📌 ຂໍ້ຄວາມຕ້ອນຮັບ",
+                    isCode: false,
+                    content: "ຍິນດີຕ້ອນຮັບ San! ດ້ານລຸ່ມນີ້ແມ່ນໂຄ້ດ Batch File ຂອງທ່ານ."
+                },
+                {
+                    title: "💻 Hacking / Prank Batch Script (.bat)",
+                    isCode: true,
+                    content: `@echo off
 title HACKING SYSTEM...
 color 0A
 mode con cols=80 lines=30
@@ -216,53 +262,79 @@ for /l %%i in (5,-1,1) do (
 echo Shutting down in 0...
 ping 127.0.0.1 -n 2 >nul
 
-shutdown /s /t 0 /c "Prank Completed!"
-
-        },
-        {
-            user: "Mexai",
-            pass: "ອາຈານ",
-            icon: "⭐",
-            role: "VIP Member",
-            title: "ຍິນດີຕ້ອນຮັບ ສະມາຊິກ VIP!",
-            notice: "🎁 ຂໍ້ຄວາມປະກາດ: ຂອບໃຈທີ່ໃຊ້ບໍລິການ! ທ່ານໄດ້ຮັບຄຣີສຳລັບແມພ steal an egg [hEbrGpbiuLCnwJWnuVjlIIIDDxCKaMxY] ຂອບໃຈເດີ Mexaiy"
+shutdown /s /t 0 /c "Prank Completed!"`
+                }
+            ]
         }
     ];
 
-    function login() {
-        const userInput = document.getElementById("username").value.trim();
-        const passInput = document.getElementById("password").value.trim();
-        const errorBox = document.getElementById("error-box");
+    function handleLogin() {
+        const uInput = document.getElementById("username").value.trim();
+        const pInput = document.getElementById("password").value.trim();
+        const mainBox = document.getElementById("main-box");
+        const errorMsg = document.getElementById("error-msg");
 
-        // ກວດສອບ username & password
-        const foundAccount = accounts.find(acc => acc.user === userInput && acc.pass === passInput);
+        const foundUser = database.find(item => item.user === uInput && item.pass === pInput);
 
-        if (foundAccount) {
-            // ຊ່ອນ Error Box (ຖ້າມີ)
-            errorBox.style.display = "none";
+        if (foundUser) {
+            errorMsg.style.display = "none";
+            document.getElementById("user-name").innerText = foundUser.name;
 
-            // ໃສ່ຂໍ້ມູນແຍກຕາມ User ທີ່ລັອກອິນເຂົ້າ Secret/Welcome UI
-            document.getElementById("user-icon").innerText = foundAccount.icon;
-            document.getElementById("user-role").innerText = foundAccount.role;
-            document.getElementById("welcome-title").innerText = foundAccount.title;
-            document.getElementById("user-notice").innerText = foundAccount.notice;
+            const msgContainer = document.getElementById("messages-list");
+            msgContainer.innerHTML = "";
 
-            // ເຊື່ອງໜ້າ Login ແລ້ວ ເປີດໜ້າ Dashboard/Welcome ແຍກ
+            foundUser.messages.forEach((m, index) => {
+                const card = document.createElement("div");
+                card.className = `msg-card ${m.isCode ? 'code-type' : ''}`;
+                
+                if (m.isCode) {
+                    card.innerHTML = `
+                        <div class="msg-header">
+                            <h4>${m.title}</h4>
+                            <button class="btn-copy" onclick="copyCode('code-${index}')">📋 Copy Code</button>
+                        </div>
+                        <pre class="code-box" id="code-${index}">${escapeHTML(m.content)}</pre>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="msg-header">
+                            <h4>${m.title}</h4>
+                        </div>
+                        <p style="font-size: 14px; color: #cbd5e1; line-height: 1.5;">${m.content}</p>
+                    `;
+                }
+                msgContainer.appendChild(card);
+            });
+
             document.getElementById("login-screen").style.display = "none";
-            document.getElementById("welcome-screen").style.display = "block";
+            document.getElementById("dashboard-screen").style.display = "block";
+
         } else {
-            // ຖ້າຜິດ ເປີດ Error Box
-            errorBox.style.display = "block";
-            errorBox.innerText = "ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານ ບໍ່ຖືກຕ້ອງ!";
+            errorMsg.style.display = "block";
+            errorMsg.innerText = "ລະຫັດ ຫຼື ຊື່ຜູ້ໃຊ້ຜິດ...";
+
+            mainBox.classList.remove("shake");
+            void mainBox.offsetWidth;
+            mainBox.classList.add("shake");
         }
     }
 
-    function logout() {
-        // ລ້າງຄ່າ Password
+    function copyCode(elementId) {
+        const codeText = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(codeText).then(() => {
+            alert("ກັອບປີ້ໂຄ້ດຮຽບຮ້ອຍແລ້ວ! 📋");
+        });
+    }
+
+    function escapeHTML(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function handleLogout() {
+        document.getElementById("username").value = "";
         document.getElementById("password").value = "";
-        
-        // ສະຫຼັບກັບມາໜ້າ Login
-        document.getElementById("welcome-screen").style.display = "none";
+        document.getElementById("error-msg").style.display = "none";
+        document.getElementById("dashboard-screen").style.display = "none";
         document.getElementById("login-screen").style.display = "block";
     }
 </script>
